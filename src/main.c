@@ -436,11 +436,7 @@ error_reading:;
   g_audio_mutex = SDL_CreateMutex();
   if (!g_audio_mutex) Die("No mutex");
 
-  if (g_rtl_game_info->game_id == kGameID_SMB1 ||
-      g_rtl_game_info->game_id == kGameID_SMBLL)
-    g_spc_player = SmasSpcPlayer_Create();
-  else if (g_rtl_game_info->game_id == kGameID_SMW)
-    g_spc_player = SmwSpcPlayer_Create();
+  g_spc_player = SmwSpcPlayer_Create();
 
   g_spc_player->initialize(g_spc_player);
 

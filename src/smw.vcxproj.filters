@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Smb1">
-      <UniqueIdentifier>{0557fe1f-910c-415c-8384-20f8ff3c6d87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{5b002459-3732-4987-8e36-5228b1cf9b01}</UniqueIdentifier>
     </Filter>
@@ -13,9 +10,6 @@
     <Filter Include="Smw">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Smb Lost Levels">
-      <UniqueIdentifier>{c20be95b-4f11-4834-a006-bfb273e4bc0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Snes">
       <UniqueIdentifier>{e1763dbc-4fb3-417f-ad1a-8436411c3b7a}</UniqueIdentifier>
@@ -38,9 +32,6 @@
       <Filter>Snes</Filter>
     </ClCompile>
     <ClCompile Include="snes\dsp.c">
-      <Filter>Snes</Filter>
-    </ClCompile>
-    <ClCompile Include="snes\input.c">
       <Filter>Snes</Filter>
     </ClCompile>
     <ClCompile Include="snes\ppu.c">
@@ -103,18 +94,6 @@
     <ClCompile Include="snes\ppu_old.c">
       <Filter>Snes</Filter>
     </ClCompile>
-    <ClCompile Include="..\smb1\smb1_00.c">
-      <Filter>Smb1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smb1\smb1_01.c">
-      <Filter>Smb1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smb1\smb1_02.c">
-      <Filter>Smb1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smb1\smb1_08.c">
-      <Filter>Smb1</Filter>
-    </ClCompile>
     <ClCompile Include="common_cpu_infra.c">
       <Filter>Common</Filter>
     </ClCompile>
@@ -130,32 +109,8 @@
     <ClCompile Include="util.c">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\smb1\smb1_cpu_infra.c">
-      <Filter>Smb1</Filter>
-    </ClCompile>
     <ClCompile Include="common_rtl.c">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_02.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_08.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_00.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_0b.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_01.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smbll\smbll_cpu_infra.c">
-      <Filter>Smb Lost Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\smb1\smb1_spc_player.c">
-      <Filter>Smb1</Filter>
     </ClCompile>
     <ClCompile Include="lm.c">
       <Filter>Smw</Filter>
@@ -189,9 +144,6 @@
     <ClInclude Include="snes\dsp_regs.h">
       <Filter>Snes</Filter>
     </ClInclude>
-    <ClInclude Include="snes\input.h">
-      <Filter>Snes</Filter>
-    </ClInclude>
     <ClInclude Include="snes\ppu.h">
       <Filter>Snes</Filter>
     </ClInclude>
@@ -216,18 +168,6 @@
     <ClInclude Include="snes\snes_regs.h">
       <Filter>Snes</Filter>
     </ClInclude>
-    <ClInclude Include="..\smb1\smb1_variables.h">
-      <Filter>Smb1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smb1\smb1_consts.h">
-      <Filter>Smb1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smb1\smb1_rtl.h">
-      <Filter>Smb1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smb1\smb1_funcs.h">
-      <Filter>Smb1</Filter>
-    </ClInclude>
     <ClInclude Include="consts.h">
       <Filter>Smw</Filter>
     </ClInclude>
@@ -248,18 +188,6 @@
     </ClInclude>
     <ClInclude Include="common_rtl.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smbll\smbll_funcs.h">
-      <Filter>Smb Lost Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smbll\smbll_consts.h">
-      <Filter>Smb Lost Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smbll\smbll_variables.h">
-      <Filter>Smb Lost Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\smbll\smbll_rtl.h">
-      <Filter>Smb Lost Levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
