@@ -4,6 +4,8 @@
 #include "util.h"
 #include "config.h"
 #include "snes/snes.h"
+#include <time.h>
+#include "smw_hijack.h"
 
 struct StateRecorder;
 
@@ -819,34 +821,68 @@ void RtlWriteSram(void) {
 
 
 void SmwCopyToVram(uint16 vram_addr, const uint8 *src, int n) {
-  for (size_t i = 0; i < (n >> 1); i++)
+  for (size_t i = 0; i < (n >> 1); i++) {
+    if (Hijack_SmwCopyToVram_ForLoop_VRAM())
+      vram_addr++;
+
+    if (Hijack_SmwCopyToVram_ForLoop_SKIP())
+      continue;
+
     g_ppu->vram[vram_addr + i] = WORD(src[i * 2]);
+  }
 }
 
 void SmwCopyToVramPitch32(uint16 vram_addr, const uint8 *src, int n) {
-  for (size_t i = 0; i < (n >> 1); i++)
+  for (size_t i = 0; i < (n >> 1); i++) {
+    if (Hijack_SmwCopyToVramPitch32_ForLoop_VRAM())
+      vram_addr++;
+
+    if (Hijack_SmwCopyToVramPitch32_ForLoop_SKIP())
+      continue;
+
     g_ppu->vram[vram_addr + i * 32] = WORD(src[i * 2]);
+  }
 }
 
 void SmwCopyToVramLow(uint16 vram_addr, const uint8 *src, int n) {
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++) {
+    if (Hijack_SmwCopyToVramLow_ForLoop_VRAM())
+      vram_addr++;
+
+    if (Hijack_SmwCopyToVramLow_ForLoop_SKIP())
+      continue;
     g_ppu->vram[vram_addr + i] = (g_ppu->vram[vram_addr + i] & 0xff00) | src[i];
+  }
 }
 
 void SmwCopyFromVram(uint16 vram_addr, uint8 *dst, int n) {
-  for (size_t i = 0; i < (n >> 1); i++)
+  for (size_t i = 0; i < (n >> 1); i++) {
+    if (Hijack_SmwCopyFromVram_ForLoop_VRAM())
+      vram_addr++;
+
+    if (Hijack_SmwCopyFromVram_ForLoop_SKIP())
+      continue;
+
     WORD(dst[i * 2]) = g_ppu->vram[vram_addr + i];
+  }
 }
 
 
 void RtlUpdatePalette(const uint16 *src, int dst, int n) {
-  for(int i = 0; i < n; i++)
+  for (int i = 0; i < n; i++) {
+    if (Hijack_RtlUpdatePalette_ForLoop_SKIP())
+      continue;
+
     g_ppu->cgram[dst + i] = src[i];
+  }
 }
 
 void SmwClearVram(uint16 vram_addr, uint16 value, int n) {
-  for (int i = 0; i < n; i++)
+  for (int i = 0; i < n; i++) {
+    if (Hijack_SmwClearVram_ForLoop_SKIP())
+        continue;
     g_ppu->vram[vram_addr + i] = value;
+  }
 }
 
 uint16 *RtlGetVramAddr() {

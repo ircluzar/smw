@@ -166,6 +166,7 @@
     <ClCompile Include="smw_0c.c" />
     <ClCompile Include="smw_0d.c" />
     <ClCompile Include="smw_cpu_infra.c" />
+    <ClCompile Include="smw_hijack.c" />
     <ClCompile Include="smw_rtl.c" />
     <ClCompile Include="snes\apu.c">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -210,6 +211,7 @@
     <ClInclude Include="consts.h" />
     <ClInclude Include="funcs.h" />
     <ClInclude Include="glsl_shader.h" />
+    <ClInclude Include="smw_hijack.h" />
     <ClInclude Include="smw_rtl.h" />
     <ClInclude Include="snes\apu.h" />
     <ClInclude Include="snes\cart.h" />
