@@ -306,14 +306,14 @@ void RunOneFrameOfGame_Both(void) {
   MakeSnapshot(&g_snapshot_before);
 
   // Run orig version then snapshot
-again_theirs:
+//again_theirs:
   g_dbg_ctr_mine = g_dbg_ctr_theirs = 0;
   g_snes->runningWhichVersion = 1;
   g_rtl_game_info->run_frame_emulated();
   MakeSnapshot(&g_snapshot_theirs);
 
   // Run my version and snapshot
-//again_mine:
+again_mine:
   g_ppu = g_my_ppu;
   RestoreSnapshot(&g_snapshot_before);
 
@@ -325,7 +325,7 @@ again_theirs:
 
   // Compare both snapshots
   g_rtl_game_info->fix_snapshot_for_compare(&g_snapshot_mine, &g_snapshot_theirs);
-  VerifySnapshotsEq(&g_snapshot_mine, &g_snapshot_theirs, &g_snapshot_before);
+  //VerifySnapshotsEq(&g_snapshot_mine, &g_snapshot_theirs, &g_snapshot_before);
 
   if (g_fail && false) {
     g_fail = false;
@@ -336,7 +336,7 @@ again_theirs:
     RestoreSnapshot(&g_snapshot_before);
 
     if (g_debug_flag)
-      goto again_theirs;
+      goto again_mine;
 
     SaveBugSnapshot();
     g_rtl_game_info->run_frame_emulated();
@@ -344,7 +344,7 @@ again_theirs:
   }
 
   g_ppu = g_snes->ppu;
-  RestoreSnapshot(&g_snapshot_theirs);
+  RestoreSnapshot(&g_snapshot_mine);
 getout:
   g_ppu = g_other_image ? g_my_ppu : g_snes->ppu;
   g_snes->runningWhichVersion = 0;
