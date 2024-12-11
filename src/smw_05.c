@@ -2146,6 +2146,8 @@ void ProcessLevelEndRoutines() {  // 05cc07
 }
 
 void ShowCourseClearText() {  // 05cc66
+  Hijack_LevelWin();
+
   int16 v4;
 
   int8 v0 = 0;

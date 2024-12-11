@@ -752,7 +752,7 @@ uint8 CheckNormalSpriteLevelColl_Ceiling(uint8 k) {  // 018014
 
 void SpawnNormalSpriteTurnAroundSmoke(uint8 k) {  // 01804e
   if (spr_table1588[k]) {
-    if (!(flag_ice_level | counter_global_frames & 3)) {
+    if (!((flag_ice_level || Hijack_FlagIceLevel_OVERRIDE()) | counter_global_frames & 3)) {
       SpawnNormalSpriteTurnAroundSmoke_Entry2(k, 4, 10);
     }
   }
@@ -1317,7 +1317,7 @@ LABEL_43:
       }
       if (!CheckNormalSpriteLevelColl_Floor(k))
         goto LABEL_43;
-      uint8 r0 = flag_ice_level ? 1 : 2;
+      uint8 r0 = (flag_ice_level || Hijack_FlagIceLevel_OVERRIDE()) ? 1 : 2;
       uint8 v10 = spr_xspeed[v8];
       if (v10 >= 2) {
         if ((int8)(v10 - 2) < 0)
@@ -1366,7 +1366,7 @@ LABEL_43:
   if (!CheckNormalSpriteLevelColl_Floor(k))
     goto LABEL_23;
   uint8 v4 = 2;
-  if (flag_ice_level)
+  if (flag_ice_level || Hijack_FlagIceLevel_OVERRIDE())
     v4 = 1;
   uint8 r0 = v4;
   uint8 v5 = spr_xspeed[k];

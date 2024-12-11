@@ -2405,6 +2405,8 @@ void UploadOverworldLayer1And2Tilemaps(uint8 j) {  // 00a529
 }
 
 void GameMode12_PrepareLevel() {  // 00a59c
+  Hijack_StartNewLevel();
+
   ClearLayer3Tilemap();
   DamagePlayer_DisableButtons();
   flag_upload_load_screen_letters_tovram = 0;
@@ -3699,6 +3701,8 @@ void PlayerState0A_NoYoshiCutscene_00C90A() {  // 00c90a
 }
 
 void PlayerState00_HandleEndOfLevel() {  // 00c915
+  Hijack_LevelWin();
+
   DamagePlayer_DisableButtons();
   flag_player_in_lakitus_cloud = 0;
   player_override_walking_frames = 0;
@@ -3911,6 +3915,11 @@ void PlayerState00() {  // 00cc68
         player_xspeed = 0;
         player_current_pose = 15;
       } else {
+
+        if (Hijack_PlayerState0_SKIP()) {
+          return;
+        }
+
         PlayerState00_00CCE0();
       }
     }
@@ -4196,7 +4205,7 @@ LABEL_11:
     v3 = v2;
     goto LABEL_12;
   }
-  if (flag_ice_level) {
+  if (flag_ice_level || Hijack_FlagIceLevel_OVERRIDE()) {
     v3 = io_controller_hold1 & 3;
     if ((io_controller_hold1 & 3) == 0)
       goto LABEL_12;
@@ -4448,6 +4457,12 @@ LABEL_6:
 }
 
 void HandlePlayerPhysics() {  // 00d5f2
+
+    if (Hijack_HandlePlayerPhysics_SKIP())
+    {
+    return;
+    }
+
   uint8 v4;
   uint8 r1 = 0;
   if (!player_in_air_flag) {
@@ -4460,7 +4475,7 @@ void HandlePlayerPhysics() {  // 00d5f2
         ((io_controller_press2 | io_controller_press1) & 0x80) == 0) {
       if (player_ducking_flag) {
         if (player_xspeed) {
-          if (!flag_ice_level)
+          if (!flag_ice_level || Hijack_FlagIceLevel_OVERRIDE())
             SpawnPlayerTurnAroundSmoke();
         }
         goto LABEL_12;
@@ -4480,7 +4495,7 @@ void HandlePlayerPhysics() {  // 00d5f2
           goto LABEL_25;
         ++v1;
       }
-      player_yspeed = kHandlePlayerPhysics_JumpHeightTable[v1];
+      player_yspeed = kHandlePlayerPhysics_JumpHeightTable[v1]*0.80;
       uint8 v2 = 11;
       if (player_pmeter >= 0x70) {
         if (!timer_wait_before_cape_flight_begins)
@@ -4530,7 +4545,7 @@ LABEL_40:
     v4 = player_slope_player_is_on1 | (4 * v3);
     if (player_xspeed && ((*((uint8 *)kHandlePlayerPhysics_MarioAccel + v4 + 1) ^ player_xspeed) & 0x80) != 0 &&
         !timer_player_slides_when_turing) {
-      if (!flag_ice_level) {
+      if (!flag_ice_level || Hijack_FlagIceLevel_OVERRIDE()) {
         player_turning_around_flag = 13;
         SpawnPlayerTurnAroundSmoke();
       }
@@ -4574,7 +4589,7 @@ void HandlePlayerPhysics_00D742(uint8 k, uint8 j) {  // 00d742
   } else {
     int v2 = k >> 1;
     uint16 v3 = kHandlePlayerPhysics_MarioAccel[v2];
-    if (flag_ice_level) {
+    if (flag_ice_level || Hijack_FlagIceLevel_OVERRIDE()) {
       if (!player_in_air_flag)
         v3 = kHandlePlayerPhysics_DATA_00D43D[v2];
     }
@@ -4960,8 +4975,21 @@ LABEL_31:
       player_facing_direction ^= 1;
   }
 }
+int flipflop = 0;
 
 void UpdatePlayerSpritePosition() {  // 00dc2d
+
+  if (Hijack_UpdatePlayerSpritePosition_SKIP()) {
+    if (flipflop == 0)
+      flipflop = 1;
+    else
+      flipflop = 0;
+
+    if (flipflop == 0)
+      return;
+  }
+
+
   uint8 tmp8a = player_yspeed;
   if (player_wall_walk_status) {
     uint8 v0 = player_xspeed;
@@ -5618,6 +5646,7 @@ LABEL_10:
       io_music_ch1 = 12;
       misc_music_register_backup = -1;
       timer_end_level = 8;
+      Hijack_LevelWin();
     }
     goto LABEL_10;
   }

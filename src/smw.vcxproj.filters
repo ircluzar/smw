@@ -192,9 +192,6 @@
     <ClInclude Include="common_rtl.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="smw_hijack.h">
-      <Filter>Smw</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
