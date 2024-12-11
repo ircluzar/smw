@@ -17,21 +17,59 @@ int Chance(double percent)			// percent chance of winning
   if (roll < percent) return 1.0;		// winner
   else return 0;					// loser
 }
+int speedhackTimeout = 0;
+
+
+void Hijack_TimeoutSpeedHacks() {
+  speedhackTimeout = 666;
+}
 
 void Hijack_StartNewLevel() {
   multiplier = 1.0;
-  autoincrease = autoincrease * 1.15;
+  autoincrease = autoincrease * 1.05;
 }
 
 void Hijack_LevelWin() {
-  multiplier = 1.0;
-  //autoincrease = autoincrease * 1.25;
+  multiplier = 1;
+  speedhackTimeout = 666;
 }
 
-int Hijack_UpdatePlayerSpritePosition_SKIP() { return Chance(0.69); }
-int Hijack_FlagIceLevel_OVERRIDE() { return Chance(0.420); }
-int Hijack_PlayerState0_SKIP() { return Chance(0.000001); }
-int Hijack_HandlePlayerPhysics_SKIP() { return Chance(0.00001); }
+
+
+int Hijack_UpdatePlayerSpritePosition_SKIP() {
+    if (speedhackTimeout > 0)
+    {
+    speedhackTimeout--;
+    return 0;
+    }
+
+    return Chance(0.69); 
+}
+int Hijack_FlagIceLevel_OVERRIDE() { 
+        if (speedhackTimeout > 0) {
+    speedhackTimeout--;
+    return 0;
+    }
+
+
+    return Chance(0.420); 
+}
+int Hijack_PlayerState0_SKIP() {
+    if (speedhackTimeout > 0) {
+    speedhackTimeout--;
+    return 0;
+    }
+
+    return Chance(0.000001); 
+}
+int Hijack_HandlePlayerPhysics_SKIP() {
+    if (speedhackTimeout > 0) {
+    speedhackTimeout--;
+    return 0;
+    }
+
+    return Chance(0.00001);
+}
 
 int Hijack_SmwCopyToVram_ForLoop_VRAM() { return Chance(0.0001); }
 int Hijack_SmwCopyToVram_ForLoop_SKIP() { return Chance(0.00005); }

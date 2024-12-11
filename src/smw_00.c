@@ -1945,9 +1945,9 @@ void GameMode0A_PlayerSelect_Entry2() {  // 009e17
   players_lives[1] = -1;
   uint8 v0 = flag_two_player_game;
   do
-    players_lives[v0--] = 4;
+    players_lives[v0--] = 68;
   while ((v0 & 0x80) == 0);
-  player_current_life_count = 4;
+  player_current_life_count = 68;
   player_current_coin_count = 0;
   yoshi_carry_over_levels_flag = 0;
   player_current_power_up = 0;
@@ -2249,6 +2249,9 @@ void GameMode14_InLevel() {  // 00a1da
     if (timer_prevent_pause) {
       --timer_prevent_pause;
     } else if ((io_controller_press1 & 0x10) != 0 && !timer_end_level && player_current_state < 9) {
+      PlayerState09_Death();
+      return;
+
       timer_prevent_pause = 60;
       uint8 v1 = 18;
       flag_pause ^= 1;
@@ -4396,6 +4399,8 @@ void PlayerStateXX_EnterPipe_Vertical() {  // 00d203
 }
 
 void PlayerStateXX_EnterPipe_00D22D() {  // 00d22d
+  Hijack_TimeoutSpeedHacks();
+
   io_controller_hold1 = 64;
   player_current_layer_priority = 2;
   if (player_timer_pipe_warping) {
