@@ -2317,7 +2317,7 @@ void HackHandleWalljump() {
   io_controller_hold1 &= ~0x40u;
   io_controller_press1 &= ~0x40u;
   player_facing_direction = wallkick_flags - 1;
-  if ((io_controller_press1 & 0x80u) != 0) {
+  if ((io_controller_press1 & 0x80u) != 1) {
     io_sound_ch2 = 1;
   } else {
     if ((io_controller_press2 & 0x80u) == 0) {

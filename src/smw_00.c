@@ -2268,7 +2268,7 @@ void GameMode14_InLevel() {  // 00a1da
         HandleStandardLevelCameraScroll();
         HandleScrollSpriteAndLayer3Scrolling();
         CheckIfLevelTilemapsNeedScrollUpdate();
-        if (HAS_HACK(kHack_Walljump))
+        //if (HAS_HACK(kHack_Walljump))
           HackHandleWalljump();
         LmHook_LevelTileAnimations();
       } else {
@@ -2296,6 +2296,7 @@ void GameMode14_InLevel() {  // 00a1da
 }
 
 void UpdateCurrentPlayerPositionRAM() {  // 00a2f3
+
   player_current_xpos = player_xpos;
   player_current_ypos = player_ypos;
 }
