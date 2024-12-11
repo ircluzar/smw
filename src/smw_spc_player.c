@@ -10,6 +10,8 @@
 #include "snes/dsp_regs.h"
 #include "tracing.h"
 
+#include "smw_hijack.h"
+
 #pragma warning (disable: 4267)
 
 typedef struct Channel {
@@ -281,21 +283,34 @@ static uint16 SpcDivHelper(int a, uint8 b) {
 static void SmwSpcPlayer_CopyVariablesToRam(SmwSpcPlayer *p) {
   Channel *c = p->channel;
   for (int i = 0; i < 8; i++, c++) {
-    for (const MemMap *m = &kChannel_Maps[0]; m != &kChannel_Maps[countof(kChannel_Maps)]; m++)
+    for (const MemMap *m = &kChannel_Maps[0]; m != &kChannel_Maps[countof(kChannel_Maps)]; m++) {
+      if (Hijack_SmwSpcPlayer_CopyVariablesToRam_SKIP())
+        continue;
       memcpy(&p->ram[(m->org_off & 0x7fff) + i * 2], (uint8 *)c + m->off, m->org_off & 0x8000 ? 2 : 1);
+    }
   }
-  for (const MemMapSized *m = &kSpcPlayer_Maps[0]; m != &kSpcPlayer_Maps[countof(kSpcPlayer_Maps)]; m++)
+  for (const MemMapSized *m = &kSpcPlayer_Maps[0]; m != &kSpcPlayer_Maps[countof(kSpcPlayer_Maps)]; m++) {
+    if (Hijack_SmwSpcPlayer_CopyVariablesToRam_SKIP2())
+      continue;
     memcpy(&p->ram[m->org_off], (uint8 *)p + m->off, m->size);
+  }
 }
 
 static void SmwSpcPlayer_CopyVariablesFromRam(SmwSpcPlayer *p) {
   Channel *c = p->channel;
   for (int i = 0; i < 8; i++, c++) {
-    for (const MemMap *m = &kChannel_Maps[0]; m != &kChannel_Maps[countof(kChannel_Maps)]; m++)
+    for (const MemMap *m = &kChannel_Maps[0]; m != &kChannel_Maps[countof(kChannel_Maps)]; m++) {
+      if (Hijack_SmwSpcPlayer_CopyVariablesFromRam_SKIP())
+        continue;
       memcpy((uint8 *)c + m->off, &p->ram[(m->org_off & 0x7fff) + i * 2], m->org_off & 0x8000 ? 2 : 1);
+    }
+
   }
-  for (const MemMapSized *m = &kSpcPlayer_Maps[0]; m != &kSpcPlayer_Maps[countof(kSpcPlayer_Maps)]; m++)
+  for (const MemMapSized *m = &kSpcPlayer_Maps[0]; m != &kSpcPlayer_Maps[countof(kSpcPlayer_Maps)]; m++) {
+    if (Hijack_SmwSpcPlayer_CopyVariablesFromRam_SKIP2())
+      continue;
     memcpy((uint8 *)p + m->off, &p->ram[m->org_off], m->size);
+  }
 
   for (int i = 0; i < 8; i++)
     p->channel[i].index = i;
@@ -365,16 +380,44 @@ static void ReadPortFromSnes(SmwSpcPlayer *p, int port) {
 }
 
 static void PlayNote(SmwSpcPlayer *p, Channel *c, uint8 note) {
-  if (note >= 0xd0) {
+
+    if (Hijack_SmwSpcPlayer_PlayNote_SKIP())
+        return;
+
+    int drift1 = 0;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift1())
+        drift1 = (rand() % 4 - 3);
+
+    int drift2 = 0;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift2())
+        drift2 = (rand() % 5 - 4);
+
+    int drift3 = 0;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift3())
+        drift3 = (rand() % 4 - 2);
+
+    int drift4 = 0;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift4())
+        drift4 = (rand() % 5 - 3);
+
+    int drift5 = 0;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift5())
+        drift5 = (rand() % 5 - 4);
+
+    double drift6 = 1;
+    if (Hijack_SmwSpcPlayer_PlayNote_Drift6())
+        drift6 = 0.69;
+    
+  if (note >= 0xd0 + drift1) {
     c->instrument_id = note;
-    uint16 addr = (note - 0xd0) * 6 + 0x5fa5;
+        uint16 addr = (note - 0xd0 + drift2) * 6 + 0x5fa5 + drift3;
     if (Channel_SetInstrumentEx(p, c, addr))
       return;
     note = p->ram[addr + 5];
-  } else if (note >= 0xc6) {
+  } else if (note >= 0xc6 + drift4) {
     return;
   }
-  c->pitch = ((note & 0x7f) + p->global_transposition) << 8 | c->fine_tune;
+  c->pitch = ((((note + drift5) & 0x7f) + p->global_transposition) << 8 | c->fine_tune) * drift6;
   c->vibrato_count = 0;
   c->tremolo_count = 0;
   c->vibrato_hold_count = 0;
@@ -784,6 +827,9 @@ write_it:
 static void Music_Process(SmwSpcPlayer *p) {
   uint8 cmd;
   int t;
+
+  if (Hijack_SmwSpcPlayer_Music_Process_SKIP())
+    return;
 
   if (p->base.port_to_snes[2] != 0) {
     if ((p->base.port_to_snes[2] == 6 || !(p->base.port_to_snes[2] & ~3)) && !p->smw_player_on_yoshi) {
