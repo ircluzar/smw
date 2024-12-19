@@ -1,5 +1,11 @@
+#include <stdbool.h>
+#include "types.h"
+#include "main.h"
+
 double autoincrease = 0.00015;
 double multiplier = -420.0;
+
+int requestFlip = 0;
 
 int Chance(double percent)			// percent chance of winning
 {
@@ -17,7 +23,7 @@ int Chance(double percent)			// percent chance of winning
   if (roll < percent) return 1.0;		// winner
   else return 0;					// loser
 }
-int speedhackTimeout = 0;
+int speedhackTimeout = 666;
 
 
 void Hijack_TimeoutSpeedHacks() {
@@ -35,6 +41,21 @@ void Hijack_LevelWin() {
 }
 
 
+int Hijack_RequestFlip()
+{
+  requestFlip = 1;
+}
+
+int Hijack_MainRunningLoop_FLIP()
+{
+    if (requestFlip == 1)
+    {
+    requestFlip = 0;
+    return 1;
+    }
+
+    return 0;
+}
 
 int Hijack_UpdatePlayerSpritePosition_SKIP() {
     if (speedhackTimeout > 0)

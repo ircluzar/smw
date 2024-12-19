@@ -2368,6 +2368,9 @@ LABEL_27:
   smoke_spr_xpos_lo[v4] = player_xpos;
   smoke_spr_ypos_lo[v4] = player_ypos + 16;
   smoke_spr_timer[v4] = 16;
+
+  Hijack_RequestFlip();
+
 }
 
 uint8 LmFunc_ReadLevelInfoByte(const uint8 *p) {

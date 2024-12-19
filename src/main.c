@@ -64,6 +64,8 @@ struct SpcPlayer *g_spc_player;
 static uint8_t g_pixels[256 * 4 * 240];
 static uint8_t g_my_pixels[256 * 4 * 240];
 
+int jold = 0;
+
 int g_got_mismatch_count;
 
 enum {
@@ -74,7 +76,7 @@ enum {
   kDefaultSamples = 2048,
 };
 
-static const char kWindowTitle[] = "SMW";
+static const char kWindowTitle[] = "SMW Saddam Edition";
 static uint32 g_win_flags = SDL_WINDOW_RESIZABLE;
 static SDL_Window *g_window;
 
@@ -484,6 +486,20 @@ error_reading:;
   while (running) {
     SDL_Event event;
 
+    if (Hijack_MainRunningLoop_FLIP() == 1)
+    {
+        if (jold == 4)
+        {
+            HandleCommand(4, false);
+            HandleCommand(3, true);
+            jold = 3;
+        } else if (jold == 3) {
+            HandleCommand(3, false);
+            HandleCommand(4, true);
+            jold = 4;
+        }
+    }
+
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
       case SDL_CONTROLLERDEVICEADDED:
@@ -659,7 +675,7 @@ static void RenderNumber(uint8 *dst, size_t pitch, int n, uint8 big) {
     RenderDigit(dst + (i << big), pitch, *s - '0', 0xffffff, big);
 }
 
-static void HandleCommand(uint32 j, bool pressed) {
+void HandleCommand(uint32 j, bool pressed) {
   static const uint8 kKbdRemap[] = { 4, 5, 6, 7, 2, 3, 8, 0, 9, 1, 10, 11 };
   if (j < kKeys_Controls)
     return;
@@ -742,10 +758,42 @@ static void HandleCommand(uint32 j, bool pressed) {
   }
 }
 
+int keyCodeOld = 0;
+int keyModOld = 0;
+bool hold = false;
+
 static void HandleInput(int keyCode, int keyMod, bool pressed) {
+
   int j = FindCmdForSdlKey(keyCode, (SDL_Keymod)keyMod);
-  if (j != 0)
-    HandleCommand(j, pressed);
+
+  if (j == 1 || j == 2 || j == 3 || j == 4)  // handle directions
+  {
+    if (!pressed) {
+      jold = j;
+      hold = true;
+    } else {
+      if (hold) {
+        hold = false;
+        HandleCommand(jold, false);
+      }
+
+      HandleCommand(j, pressed);
+    }
+
+  } 
+  else if (j == 10)
+  {
+    if (pressed) {
+      HandleCommand(j, pressed);
+    }
+  }
+  else  // handle other
+  {
+    if (j != 0) {
+      HandleCommand(j, pressed);
+    }
+  }
+
 }
 
 static uint32 GetActiveControllers() {
